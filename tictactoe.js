@@ -14,6 +14,15 @@ function updateIcons() {
     playerIcons.O = iconSelect2.value;
 }
 
+function updateBoardIcons() {
+    cells.forEach((cell, idx) => {
+        const mark = board[idx];
+        if (mark) {
+            cell.textContent = playerIcons[mark];
+        }
+    });
+}
+
 function syncIconOptions() {
     Array.from(iconSelect1.options).forEach(opt => {
         opt.disabled = opt.value === iconSelect2.value;
@@ -82,10 +91,12 @@ cells.forEach(cell => cell.addEventListener('click', handleClick));
 resetBtn.addEventListener('click', resetGame);
 iconSelect1.addEventListener('change', () => {
     ensureUniqueIcons(iconSelect1);
+    updateBoardIcons();
     statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 });
 iconSelect2.addEventListener('change', () => {
     ensureUniqueIcons(iconSelect2);
+    updateBoardIcons();
     statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 });
 
