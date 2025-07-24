@@ -14,6 +14,29 @@ function updateIcons() {
     playerIcons.O = iconSelect2.value;
 }
 
+function syncIconOptions() {
+    Array.from(iconSelect1.options).forEach(opt => {
+        opt.disabled = opt.value === iconSelect2.value;
+    });
+    Array.from(iconSelect2.options).forEach(opt => {
+        opt.disabled = opt.value === iconSelect1.value;
+    });
+}
+
+function ensureUniqueIcons(changedSelect) {
+    const otherSelect = changedSelect === iconSelect1 ? iconSelect2 : iconSelect1;
+    if (changedSelect.value === otherSelect.value) {
+        for (const option of otherSelect.options) {
+            if (option.value !== changedSelect.value) {
+                otherSelect.value = option.value;
+                break;
+            }
+        }
+    }
+    updateIcons();
+    syncIconOptions();
+}
+
 statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 
 function checkWin(player) {
@@ -48,6 +71,7 @@ function resetGame() {
     gameOver = false;
     currentPlayer = 'X';
     updateIcons();
+    syncIconOptions();
     cells.forEach(cell => {
         cell.textContent = '';
     });
@@ -57,10 +81,12 @@ function resetGame() {
 cells.forEach(cell => cell.addEventListener('click', handleClick));
 resetBtn.addEventListener('click', resetGame);
 iconSelect1.addEventListener('change', () => {
-    updateIcons();
+    ensureUniqueIcons(iconSelect1);
     statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 });
 iconSelect2.addEventListener('change', () => {
-    updateIcons();
+    ensureUniqueIcons(iconSelect2);
     statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 });
+
+syncIconOptions();
