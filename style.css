@@ -4,6 +4,16 @@ body {
     background-color: #000;
     color: #0ff;
     font-family: 'Orbitron', sans-serif;
+    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 1px, tra
+nsparent 2px),
+                radial-gradient(circle at 40% 60%, rgba(255,255,255,0.3) 1px, tra
+nsparent 2px),
+                radial-gradient(circle at 80% 30%, rgba(255,255,255,0.3) 1px, tra
+nsparent 2px),
+                radial-gradient(circle at 60% 80%, rgba(255,255,255,0.3) 1px, tra
+nsparent 2px),
+                linear-gradient(#000011, #000);
+    background-size: 200px 200px;
 }
 h1 {
     color: #f0f;
@@ -34,4 +44,35 @@ p.welcome {
 #status {
     margin-top: 20px;
     color: #f0f;
+}
+
+#icon-select {
+    margin-top: 20px;
+}
+#icon-select label {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+#icon-select select {
+    font-size: 1em;
+    background: #111;
+    color: #0ff;
+    border: 1px solid #0ff;
+    border-radius: 4px;
+}
+
+#reset {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #0ff;
+    background: linear-gradient(45deg, #ff0077, #00d4ff);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #0ff;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+#reset:hover {
+    box-shadow: 0 0 20px #f0f;
 }

@@ -4,8 +4,17 @@ let board = Array(9).fill(null);
 let gameOver = false;
 const statusDiv = document.getElementById('status');
 const resetBtn = document.getElementById('reset');
+const iconSelect1 = document.getElementById('icon1');
+const iconSelect2 = document.getElementById('icon2');
 
-statusDiv.textContent = `Spelare ${currentPlayer}s tur`;
+let playerIcons = { X: iconSelect1.value, O: iconSelect2.value };
+
+function updateIcons() {
+    playerIcons.X = iconSelect1.value;
+    playerIcons.O = iconSelect2.value;
+}
+
+statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 
 function checkWin(player) {
     const combos = [
@@ -20,17 +29,17 @@ function handleClick(e) {
     const idx = parseInt(e.target.dataset.index);
     if (board[idx] || gameOver) return;
     board[idx] = currentPlayer;
-    e.target.textContent = currentPlayer;
+    e.target.textContent = playerIcons[currentPlayer];
 
     if (checkWin(currentPlayer)) {
-        statusDiv.textContent = `Spelare ${currentPlayer} vinner!`;
+        statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]} vinner!`;
         gameOver = true;
     } else if (board.every(Boolean)) {
         statusDiv.textContent = 'Oavgjort!';
         gameOver = true;
     } else {
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        statusDiv.textContent = `Spelare ${currentPlayer}s tur`;
+        statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
     }
 }
 
@@ -38,11 +47,20 @@ function resetGame() {
     board = Array(9).fill(null);
     gameOver = false;
     currentPlayer = 'X';
+    updateIcons();
     cells.forEach(cell => {
         cell.textContent = '';
     });
-    statusDiv.textContent = `Spelare ${currentPlayer}s tur`;
+    statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
 }
 
 cells.forEach(cell => cell.addEventListener('click', handleClick));
 resetBtn.addEventListener('click', resetGame);
+iconSelect1.addEventListener('change', () => {
+    updateIcons();
+    statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
+});
+iconSelect2.addEventListener('change', () => {
+    updateIcons();
+    statusDiv.textContent = `Spelare ${playerIcons[currentPlayer]}s tur`;
+});
