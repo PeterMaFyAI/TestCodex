@@ -43,24 +43,13 @@ function render() {
             div.classList.add('empty');
         } else {
             div.textContent = num;
-            div.draggable = true;
-            div.addEventListener('dragstart', dragStart);
+            div.addEventListener('click', () => moveTile(idx));
         }
         puzzle.appendChild(div);
     });
-    const emptyTile = document.querySelector('.tile.empty');
-    emptyTile.addEventListener('dragover', e => e.preventDefault());
-    emptyTile.addEventListener('drop', dropOnEmpty);
 }
 
-function dragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.dataset.index);
-    e.target.classList.add('dragging');
-}
-
-function dropOnEmpty(e) {
-    e.preventDefault();
-    const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+function moveTile(from) {
     const to = tiles.indexOf(null);
     const [fx, fy] = [from % size, Math.floor(from / size)];
     const [tx, ty] = [to % size, Math.floor(to / size)];
