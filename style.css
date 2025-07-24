@@ -1,19 +1,10 @@
 body {
     margin: 0;
     padding: 40px;
-    background-color: #000;
     color: #0ff;
     font-family: 'Orbitron', sans-serif;
-    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 1px, tra
-nsparent 2px),
-                radial-gradient(circle at 40% 60%, rgba(255,255,255,0.3) 1px, tra
-nsparent 2px),
-                radial-gradient(circle at 80% 30%, rgba(255,255,255,0.3) 1px, tra
-nsparent 2px),
-                radial-gradient(circle at 60% 80%, rgba(255,255,255,0.3) 1px, tra
-nsparent 2px),
-                linear-gradient(#000011, #000);
-    background-size: 200px 200px;
+    background: url("images/background.png") no-repeat center center fixed;
+    background-size: cover;
 }
 h1 {
     color: #f0f;
