@@ -157,7 +157,7 @@ p.welcome {
 }
 #clearOrbits {
     margin-left: 10px;
-    padding: 5px 10px;
+    padding: 8px 16px;
     color: #0ff;
     background: linear-gradient(45deg, #ff0077, #00d4ff);
     border: none;
@@ -168,4 +168,12 @@ p.welcome {
 }
 #clearOrbits:hover {
     box-shadow: 0 0 20px #f0f;
+}
+
+.orbit-options {
+    margin-left: 10px;
+}
+
+.orbit-options label {
+    margin-right: 10px;
 }
