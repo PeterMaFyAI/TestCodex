@@ -156,7 +156,8 @@ p.welcome {
     text-align: right;
 }
 #clearOrbits {
-    margin-left: 10px;
+    margin-left: 0;
+    margin-top: 10px;
     padding: 8px 16px;
     color: #0ff;
     background: linear-gradient(45deg, #ff0077, #00d4ff);
