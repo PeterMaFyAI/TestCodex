@@ -20,7 +20,7 @@ controls.update();
 
 const light = new THREE.PointLight(0xffffff, 2);
 scene.add(light);
-const ambientLight = new THREE.AmbientLight(0x404040);
+const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
 
 const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
@@ -37,8 +37,8 @@ earthPivot.add(earth);
 
 const moonPivot = new THREE.Object3D();
 earthPivot.add(moonPivot);
-const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xdddddd });
-const moon = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), moonMaterial);
+const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x333333 });
+const moon = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), moonMaterial);
 moon.position.x = 4;
 moonPivot.add(moon);
 
