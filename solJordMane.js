@@ -24,7 +24,8 @@ const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
 
 const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
+// Make the sun larger relative to the earth
+const sunGeometry = new THREE.SphereGeometry(10, 32, 32);
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
 
@@ -32,11 +33,13 @@ const earthPivot = new THREE.Object3D();
 scene.add(earthPivot);
 const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2233ff });
 const earth = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), earthMaterial);
-earth.position.x = 15;
+// Increase the distance between the sun and the earth
+earth.position.x = 25;
 earthPivot.add(earth);
 
+// Place the moon pivot at the earth so the moon orbits the earth
 const moonPivot = new THREE.Object3D();
-earthPivot.add(moonPivot);
+earth.add(moonPivot);
 const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x333333 });
 const moon = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), moonMaterial);
 moon.position.x = 4;
@@ -44,7 +47,8 @@ moonPivot.add(moon);
 
 let lastTime = performance.now();
 let day = 0;
-let speedFactor = parseFloat(speedSlider.value) * 10; // days per second
+// Slow down the simulation so the minimum speed is about one fifth of before
+let speedFactor = parseFloat(speedSlider.value) * 2; // days per second
 let paused = false;
 const maxDays = 3650;
 
@@ -84,7 +88,7 @@ playPauseBtn.addEventListener('click', () => {
 });
 
 speedSlider.addEventListener('input', () => {
-    speedFactor = parseFloat(speedSlider.value) * 10;
+    speedFactor = parseFloat(speedSlider.value) * 2;
 });
 
 timelineSlider.addEventListener('input', () => {
