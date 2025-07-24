@@ -155,3 +155,17 @@ p.welcome {
     width: 4ch;
     text-align: right;
 }
+#clearOrbits {
+    margin-left: 10px;
+    padding: 5px 10px;
+    color: #0ff;
+    background: linear-gradient(45deg, #ff0077, #00d4ff);
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 10px #0ff;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+#clearOrbits:hover {
+    box-shadow: 0 0 20px #f0f;
+}

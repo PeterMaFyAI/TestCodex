@@ -5,6 +5,9 @@ const playPauseBtn = document.getElementById('playPause');
 const speedSlider = document.getElementById('speed');
 const dayCountSpan = document.getElementById('dayCount');
 const timelineSlider = document.getElementById('timeline');
+const earthOrbitCheckbox = document.getElementById('earthOrbit');
+const moonOrbitCheckbox = document.getElementById('moonOrbit');
+const clearOrbitsBtn = document.getElementById('clearOrbits');
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -15,7 +18,7 @@ container.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-camera.position.set(40, 20, 40);
+camera.position.set(120, 60, 120);
 controls.update();
 
 const light = new THREE.PointLight(0xffffff, 2);
@@ -34,7 +37,7 @@ scene.add(earthPivot);
 const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2233ff });
 const earth = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), earthMaterial);
 // Increase the distance between the sun and the earth
-earth.position.x = 25;
+earth.position.x = 75;
 earthPivot.add(earth);
 
 // Place the moon pivot at the earth so the moon orbits the earth
@@ -51,6 +54,11 @@ let day = 0;
 let speedFactor = parseFloat(speedSlider.value) * 2; // days per second
 let paused = false;
 const maxDays = 3650;
+
+const earthOrbitPoints = [];
+let earthOrbitLine = null;
+const moonOrbitPoints = [];
+let moonOrbitLine = null;
 
 function animate(time) {
     requestAnimationFrame(animate);
@@ -76,6 +84,34 @@ function animate(time) {
     earthPivot.rotation.y = earthAngle;
     moonPivot.rotation.y = moonAngle;
 
+    if (earthOrbitCheckbox.checked) {
+        const pos = new THREE.Vector3();
+        earth.getWorldPosition(pos);
+        earthOrbitPoints.push(pos.clone());
+        if (!earthOrbitLine) {
+            const geom = new THREE.BufferGeometry().setFromPoints(earthOrbitPoints);
+            const mat = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            earthOrbitLine = new THREE.Line(geom, mat);
+            scene.add(earthOrbitLine);
+        } else {
+            earthOrbitLine.geometry.setFromPoints(earthOrbitPoints);
+        }
+    }
+
+    if (moonOrbitCheckbox.checked) {
+        const pos = new THREE.Vector3();
+        moon.getWorldPosition(pos);
+        moonOrbitPoints.push(pos.clone());
+        if (!moonOrbitLine) {
+            const geom = new THREE.BufferGeometry().setFromPoints(moonOrbitPoints);
+            const mat = new THREE.LineBasicMaterial({ color: 0xffffff });
+            moonOrbitLine = new THREE.Line(geom, mat);
+            scene.add(moonOrbitLine);
+        } else {
+            moonOrbitLine.geometry.setFromPoints(moonOrbitPoints);
+        }
+    }
+
     dayCountSpan.textContent = Math.floor(day);
 
     controls.update();
@@ -93,6 +129,23 @@ speedSlider.addEventListener('input', () => {
 
 timelineSlider.addEventListener('input', () => {
     day = parseFloat(timelineSlider.value);
+});
+
+clearOrbitsBtn.addEventListener('click', () => {
+    if (earthOrbitLine) {
+        scene.remove(earthOrbitLine);
+        earthOrbitLine.geometry.dispose();
+        earthOrbitLine.material.dispose();
+        earthOrbitLine = null;
+        earthOrbitPoints.length = 0;
+    }
+    if (moonOrbitLine) {
+        scene.remove(moonOrbitLine);
+        moonOrbitLine.geometry.dispose();
+        moonOrbitLine.material.dispose();
+        moonOrbitLine = null;
+        moonOrbitPoints.length = 0;
+    }
 });
 
 window.addEventListener('resize', () => {
