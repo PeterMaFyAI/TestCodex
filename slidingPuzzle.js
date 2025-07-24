@@ -1,4 +1,5 @@
 const puzzle = document.getElementById('puzzle');
+const restartBtn = document.getElementById('restart');
 const size = 4;
 let tiles = [];
 
@@ -31,6 +32,9 @@ function init() {
     numbers.push(null);
     tiles = numbers;
     render();
+    if (restartBtn) {
+        restartBtn.style.display = 'none';
+    }
 }
 
 function render() {
@@ -57,7 +61,12 @@ function moveTile(from) {
         [tiles[from], tiles[to]] = [tiles[to], tiles[from]];
         render();
         if (checkSolved()) {
-            setTimeout(() => alert('Grattis! Du löste pusslet!'), 10);
+            setTimeout(() => {
+                alert('Grattis! Du löste pusslet!');
+                if (restartBtn) {
+                    restartBtn.style.display = 'block';
+                }
+            }, 10);
         }
     }
 }
@@ -67,6 +76,10 @@ function checkSolved() {
         if (tiles[i] !== i + 1) return false;
     }
     return true;
+}
+
+if (restartBtn) {
+    restartBtn.addEventListener('click', init);
 }
 
 init();
