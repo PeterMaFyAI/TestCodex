@@ -106,11 +106,8 @@ p.welcome {
     justify-content: center;
     font-size: 2em;
     background: rgba(0, 0, 0, 0.6);
-    cursor: grab;
+    cursor: pointer;
     user-select: none;
-}
-.tile.dragging {
-    opacity: 0.5;
 }
 .tile.empty {
     border: none;
