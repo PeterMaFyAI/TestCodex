@@ -1,3 +1,5 @@
+import { OrbitControls } from './lib/OrbitControls.js';
+
 const container = document.getElementById('simulation-container');
 const playPauseBtn = document.getElementById('playPause');
 const speedSlider = document.getElementById('speed');
@@ -10,7 +12,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(container.clientWidth, container.clientHeight);
 container.appendChild(renderer.domElement);
 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
 camera.position.set(40, 20, 40);
