@@ -20,6 +20,8 @@ controls.update();
 
 const light = new THREE.PointLight(0xffffff, 2);
 scene.add(light);
+const ambientLight = new THREE.AmbientLight(0x404040);
+scene.add(ambientLight);
 
 const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
 const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
@@ -35,14 +37,14 @@ earthPivot.add(earth);
 
 const moonPivot = new THREE.Object3D();
 earthPivot.add(moonPivot);
-const moonMaterial = new THREE.MeshPhongMaterial({ color: 0x888888 });
+const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xdddddd });
 const moon = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 32), moonMaterial);
 moon.position.x = 4;
 moonPivot.add(moon);
 
 let lastTime = performance.now();
 let day = 0;
-let speedFactor = parseFloat(speedSlider.value); // days per second
+let speedFactor = parseFloat(speedSlider.value) * 10; // days per second
 let paused = false;
 const maxDays = 3650;
 
@@ -82,7 +84,7 @@ playPauseBtn.addEventListener('click', () => {
 });
 
 speedSlider.addEventListener('input', () => {
-    speedFactor = parseFloat(speedSlider.value);
+    speedFactor = parseFloat(speedSlider.value) * 10;
 });
 
 timelineSlider.addEventListener('input', () => {
