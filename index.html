@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Codex Demo</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Denna hemsida är skapad med Codex</h1>
+    <label for="greeting-select">Välj hälsning:</label>
+    <select id="greeting-select">
+        <option value="">--Välj--</option>
+        <option value="hej">Hej</option>
+        <option value="hejdå">Hejdå</option>
+    </select>
+    <p id="response"></p>
+    <script>
+        const select = document.getElementById('greeting-select');
+        const response = document.getElementById('response');
+        select.addEventListener('change', () => {
+            if (select.value === 'hej') {
+                response.textContent = 'Tjena';
+            } else if (select.value === 'hejd\u00e5') {
+                response.textContent = 'Vi ses senare';
+            } else {
+                response.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
