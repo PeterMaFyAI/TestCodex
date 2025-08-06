@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Sveriges territorium 1600-1809</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-sA+NCD39qdhZtmhEQZjGZNU/HK2+8VsdK+XMz+dy0B8=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-o9N1jZr+n4Ztu2VME5spGI0aYawslZx2drTU9u0w0rA=" crossorigin=""></script>
+</head>
+<body>
+    <h1>Sveriges territorium 1600-1809</h1>
+    <p class="welcome">Utforska Sveriges historiska gränser.</p>
+    <p><a class="home-link" href="index.html">Till startsidan</a></p>
+
+    <div id="controls">
+        <label for="yearRange">År: <span id="yearLabel">1600</span></label>
+        <input type="range" id="yearRange" min="1600" max="1809" value="1600">
+    </div>
+    <div id="map"></div>
+
+    <script src="swedenMap.js"></script>
+</body>
+</html>
