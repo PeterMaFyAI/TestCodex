@@ -26,24 +26,30 @@ scene.add(light);
 const ambientLight = new THREE.AmbientLight(0x404040, 2);
 scene.add(ambientLight);
 
-const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-// Make the sun larger relative to the earth
+// Load textures for the celestial bodies
+const textureLoader = new THREE.TextureLoader();
+const sunTexture = textureLoader.load('images/sun.png');
+const earthTexture = textureLoader.load('images/earth.png');
+const moonTexture = textureLoader.load('images/moon.png');
+
+// Create the sun with texture and make it larger relative to the earth
+const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture });
 const sunGeometry = new THREE.SphereGeometry(10, 32, 32);
 const sun = new THREE.Mesh(sunGeometry, sunMaterial);
 scene.add(sun);
 
+// Create the earth and position it farther from the sun
 const earthPivot = new THREE.Object3D();
 scene.add(earthPivot);
-const earthMaterial = new THREE.MeshPhongMaterial({ color: 0x2233ff });
+const earthMaterial = new THREE.MeshPhongMaterial({ map: earthTexture });
 const earth = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), earthMaterial);
-// Increase the distance between the sun and the earth
 earth.position.x = 75;
 earthPivot.add(earth);
 
-// Place the moon pivot at the earth so the moon orbits the earth
+// Create the moon, orbiting the earth
 const moonPivot = new THREE.Object3D();
 earth.add(moonPivot);
-const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xffffff, emissive: 0x333333 });
+const moonMaterial = new THREE.MeshPhongMaterial({ map: moonTexture });
 const moon = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), moonMaterial);
 moon.position.x = 4;
 moonPivot.add(moon);
