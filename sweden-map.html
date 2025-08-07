@@ -14,8 +14,14 @@
     <p><a class="home-link" href="index.html">Till startsidan</a></p>
 
     <div id="controls">
-        <label for="yearRange">År: <span id="yearLabel">1600</span></label>
-        <input type="range" id="yearRange" min="1600" max="1809" value="1600">
+        <fieldset>
+            <legend>Välj fred</legend>
+            <label><input type="radio" name="period" value="1617" checked>1617 Freden i Stolbova</label>
+            <label><input type="radio" name="period" value="1645">1645 Freden i Brömsebro</label>
+            <label><input type="radio" name="period" value="1658">1658 Freden i Roskilde</label>
+            <label><input type="radio" name="period" value="1721">1721 Freden i Nystad</label>
+            <label><input type="radio" name="period" value="1809">1809 Freden i Fredrikshamn</label>
+        </fieldset>
     </div>
     <div id="map"></div>
 
