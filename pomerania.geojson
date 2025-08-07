@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"name": "Swedish Pomerania"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [13.0, 54.0],
+          [14.5, 54.0],
+          [14.5, 54.8],
+          [13.0, 54.8],
+          [13.0, 54.0]
+        ]]
+      }
+    }
+  ]
+}
