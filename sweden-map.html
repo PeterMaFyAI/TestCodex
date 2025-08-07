@@ -2,25 +2,25 @@
 <html lang="sv">
 <head>
     <meta charset="UTF-8">
-    <title>Sveriges territorium 1600-1809</title>
+    <title>Sveriges gränser</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
-    <h1>Sveriges territorium 1600-1809</h1>
+    <h1>Sveriges gränser</h1>
     <p class="welcome">Utforska Sveriges historiska gränser.</p>
     <p><a class="home-link" href="index.html">Till startsidan</a></p>
 
     <div id="controls">
         <fieldset>
-            <legend>Välj fred</legend>
-            <label><input type="radio" name="period" value="1617" checked>1617 Freden i Stolbova</label>
-            <label><input type="radio" name="period" value="1645">1645 Freden i Brömsebro</label>
-            <label><input type="radio" name="period" value="1658">1658 Freden i Roskilde</label>
-            <label><input type="radio" name="period" value="1721">1721 Freden i Nystad</label>
-            <label><input type="radio" name="period" value="1809">1809 Freden i Fredrikshamn</label>
+            <legend>Välj år</legend>
+            <label><input type="radio" name="period" value="1523" checked>1523</label>
+            <label><input type="radio" name="period" value="1617">1617</label>
+            <label><input type="radio" name="period" value="1658">1658</label>
+            <label><input type="radio" name="period" value="1809">1809</label>
+            <label><input type="radio" name="period" value="1905">1905</label>
         </fieldset>
     </div>
     <div id="map"></div>
