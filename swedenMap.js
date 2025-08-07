@@ -14,7 +14,8 @@ Promise.all([
     swedenLayer = L.geoJSON(sweData, {style: {color: 'blue', weight: 1, fillOpacity: 0.4}});
     finlandLayer = L.geoJSON(finData, {style: {color: 'blue', weight: 1, fillOpacity: 0.4}});
     map.fitBounds(swedenLayer.getBounds());
-    updateMap(parseInt(document.getElementById('yearRange').value));
+    const initial = document.querySelector('input[name="period"]:checked').value;
+    updateMap(parseInt(initial));
 });
 
 function updateMap(year) {
@@ -27,7 +28,8 @@ function updateMap(year) {
     }
 }
 
-document.getElementById('yearRange').addEventListener('input', e => {
-    document.getElementById('yearLabel').textContent = e.target.value;
-    updateMap(parseInt(e.target.value));
+document.querySelectorAll('input[name="period"]').forEach(radio => {
+    radio.addEventListener('change', e => {
+        updateMap(parseInt(e.target.value));
+    });
 });
