@@ -159,30 +159,6 @@ function step(dt){
   if(vx&&vy){const k=Math.SQRT1_2;vx*=k;vy*=k;}
   tryMoveCircle(player,vx,vy,14);
 
-  // enemies AI
-  for(const e of enemies){
-    if(e.dead) continue;
-    if(e.type==='circle'){
-      const inSameRoom = insideRect(player.x,player.y,e.home);
-      const los = lineOfSight(e.x,e.y,player.x,player.y,8,3) && Math.hypot(e.x-player.x,e.y-player.y) < 720;
-      if(inSameRoom || los) e.mode='chase';
-      if(e.mode==='chase'){ const ang=Math.atan2(player.y-e.y,player.x-e.x), spd=200; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircle(e,e.vx,e.vy,e.r-2); }
-      else{ e.timer-=dt; if(e.timer<=0 || Math.hypot(e.tx-e.x,e.ty-e.y)<6) pickIdleTarget(e);
-            const ang=Math.atan2(e.ty-e.y,e.tx-e.x), spd=55; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.r-2,e.home); }
-      if(player.alive && Math.hypot(e.x-player.x,e.y-player.y) < e.r + 14){ player.alive=false; gameOver=true; explodePlayer(); showOverlay("You were caught — click to restart"); }
-    }else{
-      const playerInBL = insideRect(player.x,player.y,e.home);
-      if(playerInBL) e.mode='chase';
-      if(e.mode==='chase'){ const ang=Math.atan2(player.y-e.y,player.x-e.x), spd=220; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.s,e.home); }
-      else{ e.timer-=dt; if(e.timer<=0 || Math.hypot(e.tx-e.x,e.ty-e.y)<6) pickIdleTarget(e);
-            const ang=Math.atan2(e.ty-e.y,e.tx-e.x), spd=50; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.s,e.home); }
-      if(player.alive && circleHitsSquare(player.x,player.y,14,e.x,e.y,e.s)){ player.alive=false; gameOver=true; explodePlayer(); showOverlay("You were caught — click to restart"); }
-    }
-  }
-
-  // keep enemies separated
-  separateEnemies(2);
-
   // bullets: substep continuous collision. First contact removes bullet.
   for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];
@@ -235,6 +211,30 @@ function step(dt){
       if(b.life<=0){ bullets.splice(i,1); removed=true; break; }
     }
   }
+
+  // enemies AI
+  for(const e of enemies){
+    if(e.dead) continue;
+    if(e.type==='circle'){
+      const inSameRoom = insideRect(player.x,player.y,e.home);
+      const los = lineOfSight(e.x,e.y,player.x,player.y,8,3) && Math.hypot(e.x-player.x,e.y-player.y) < 720;
+      if(inSameRoom || los) e.mode='chase';
+      if(e.mode==='chase'){ const ang=Math.atan2(player.y-e.y,player.x-e.x), spd=200; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircle(e,e.vx,e.vy,e.r-2); }
+      else{ e.timer-=dt; if(e.timer<=0 || Math.hypot(e.tx-e.x,e.ty-e.y)<6) pickIdleTarget(e);
+            const ang=Math.atan2(e.ty-e.y,e.tx-e.x), spd=55; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.r-2,e.home); }
+      if(player.alive && Math.hypot(e.x-player.x,e.y-player.y) < e.r + 14){ player.alive=false; gameOver=true; explodePlayer(); showOverlay("You were caught — click to restart"); }
+    }else{
+      const playerInBL = insideRect(player.x,player.y,e.home);
+      if(playerInBL) e.mode='chase';
+      if(e.mode==='chase'){ const ang=Math.atan2(player.y-e.y,player.x-e.x), spd=220; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.s,e.home); }
+      else{ e.timer-=dt; if(e.timer<=0 || Math.hypot(e.tx-e.x,e.ty-e.y)<6) pickIdleTarget(e);
+            const ang=Math.atan2(e.ty-e.y,e.tx-e.x), spd=50; e.vx=Math.cos(ang)*spd; e.vy=Math.sin(ang)*spd; tryMoveCircleInRect(e,e.vx,e.vy,e.s,e.home); }
+      if(player.alive && circleHitsSquare(player.x,player.y,14,e.x,e.y,e.s)){ player.alive=false; gameOver=true; explodePlayer(); showOverlay("You were caught — click to restart"); }
+    }
+  }
+
+  // keep enemies separated
+  separateEnemies(2);
 
   // particles
   for(let i=particles.length-1;i>=0;i--){
