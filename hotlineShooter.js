@@ -165,10 +165,11 @@ function step(dt){
   tryMoveCircle(player,vx,vy,14);
 
   // bullets: substep continuous collision. First contact removes bullet.
-  bulletLoop: for(let i=bullets.length-1;i>=0;i--){
+  for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];
     let remaining=dt;
-    while(remaining>0){
+    let remove=false;
+    while(remaining>0 && !remove){
       // handle immediate overlap before advancing
       let overlap=null, otype='';
       for(const e of enemies){
@@ -180,7 +181,7 @@ function step(dt){
         }
       }
       if(overlap){
-        hitEnemy(overlap,otype); bullets.splice(i,1); continue bulletLoop;
+        hitEnemy(overlap,otype); remove=true; break;
       }
 
       const step=Math.min(remaining,1/240); // ~4.17 ms => ~3 px step at 720 px/s
@@ -203,17 +204,18 @@ function step(dt){
       if(target){
         b.x = px + (nx - px) * bestT;
         b.y = py + (ny - py) * bestT;
-        hitEnemy(target,ttype); bullets.splice(i,1); continue bulletLoop;
+        hitEnemy(target,ttype); remove=true; break;
       }
 
       // no enemy hit this substep: wall or advance
       if(!insideAnyRect(nx,ny,1.5)){
-        wallThunk(); wallSpark(nx,ny,8); bullets.splice(i,1); continue bulletLoop;
+        wallThunk(); wallSpark(nx,ny,8); remove=true; break;
       }
 
       b.x=nx; b.y=ny; b.life-=step; remaining-=step;
-      if(b.life<=0){ bullets.splice(i,1); continue bulletLoop; }
+      if(b.life<=0){ remove=true; break; }
     }
+    if(remove){ bullets.splice(i,1); }
   }
 
   // enemies AI
