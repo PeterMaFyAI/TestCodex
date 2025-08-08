@@ -36,3 +36,10 @@ canvas {
   background: #e6ddff;
   font-weight: 700;
 }
+
+.version{
+  position:fixed;
+  top:6px;
+  right:10px;
+  font-weight:bold;
+}
