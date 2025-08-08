@@ -139,6 +139,11 @@ function segAABBHit(x1,y1,x2,y2,minx,miny,maxx,maxy){
   return (tmin>=0&&tmin<=1)?tmin:null;
 }
 
+function hitEnemy(e,shape){
+  if(shape==='circle'){ e.dead=true; explodeEnemy(e,ENEMY_COLOR); }
+  else{ e.hp-=1; splash(); if(e.hp<=0){ e.dead=true; explodeEnemy(e,HEAVY_COLOR); } }
+}
+
 // ---------- loop ----------
 let winState=false,gameOver=false;
 const overlay=document.getElementById('overlay'); const msg=document.getElementById('msg');
@@ -160,31 +165,25 @@ function step(dt){
   tryMoveCircle(player,vx,vy,14);
 
   // bullets: substep continuous collision. First contact removes bullet.
-  for(let i=bullets.length-1;i>=0;i--){
+  bulletLoop: for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];
-    let remaining=dt, removed=false;
-    while(remaining>0 && !removed){
+    let remaining=dt;
+    while(remaining>0){
       // handle immediate overlap before advancing
       let overlap=null, otype='';
       for(const e of enemies){
         if(e.dead) continue;
         if(e.type==='circle'){
-          if(Math.hypot(b.x-e.x, b.y-e.y) < e.r + b.r){ overlap=e; otype='circle'; break; }
+          if(Math.hypot(b.x-e.x,b.y-e.y)<e.r+b.r){ overlap=e; otype='circle'; break; }
         }else{
-          if(circleHitsSquare(b.x, b.y, b.r, e.x, e.y, e.s)){ overlap=e; otype='square'; break; }
+          if(circleHitsSquare(b.x,b.y,b.r,e.x,e.y,e.s)){ overlap=e; otype='square'; break; }
         }
       }
       if(overlap){
-        if(otype==='circle'){
-          overlap.dead=true; explodeEnemy(overlap, ENEMY_COLOR);
-        }else{
-          overlap.hp-=1; splash();
-          if(overlap.hp<=0){ overlap.dead=true; explodeEnemy(overlap, HEAVY_COLOR); }
-        }
-        bullets.splice(i,1); removed=true; break;
+        hitEnemy(overlap,otype); bullets.splice(i,1); continue bulletLoop;
       }
 
-      const step=Math.min(remaining, 1/240); // ~4.17 ms => ~3 px step at 720 px/s
+      const step=Math.min(remaining,1/240); // ~4.17 ms => ~3 px step at 720 px/s
       const px=b.x, py=b.y, nx=px+b.vx*step, ny=py+b.vy*step;
 
       // find earliest enemy hit on this substep
@@ -202,33 +201,18 @@ function step(dt){
       }
 
       if(target){
-        // move to impact and apply effect to a single target
         b.x = px + (nx - px) * bestT;
         b.y = py + (ny - py) * bestT;
-        if(ttype === 'circle'){
-          target.dead = true;
-          explodeEnemy(target, ENEMY_COLOR);
-        }else{
-          target.hp -= 1;
-          splash();
-          if(target.hp <= 0){
-            target.dead = true;
-            explodeEnemy(target, HEAVY_COLOR);
-          }
-        }
-        // remove bullet immediately so it can't hit another enemy
-        bullets.splice(i,1);
-        removed = true;
-        break;
+        hitEnemy(target,ttype); bullets.splice(i,1); continue bulletLoop;
       }
 
       // no enemy hit this substep: wall or advance
       if(!insideAnyRect(nx,ny,1.5)){
-        wallThunk(); wallSpark(nx,ny,8); bullets.splice(i,1); removed=true; break;
+        wallThunk(); wallSpark(nx,ny,8); bullets.splice(i,1); continue bulletLoop;
       }
 
       b.x=nx; b.y=ny; b.life-=step; remaining-=step;
-      if(b.life<=0){ bullets.splice(i,1); removed=true; break; }
+      if(b.life<=0){ bullets.splice(i,1); continue bulletLoop; }
     }
   }
 
