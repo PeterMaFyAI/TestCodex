@@ -164,6 +164,26 @@ function step(dt){
     const b=bullets[i];
     let remaining=dt, removed=false;
     while(remaining>0 && !removed){
+      // handle immediate overlap before advancing
+      let overlap=null, otype='';
+      for(const e of enemies){
+        if(e.dead) continue;
+        if(e.type==='circle'){
+          if(Math.hypot(b.x-e.x, b.y-e.y) < e.r + b.r){ overlap=e; otype='circle'; break; }
+        }else{
+          if(circleHitsSquare(b.x, b.y, b.r, e.x, e.y, e.s)){ overlap=e; otype='square'; break; }
+        }
+      }
+      if(overlap){
+        if(otype==='circle'){
+          overlap.dead=true; explodeEnemy(overlap, ENEMY_COLOR);
+        }else{
+          overlap.hp-=1; splash();
+          if(overlap.hp<=0){ overlap.dead=true; explodeEnemy(overlap, HEAVY_COLOR); }
+        }
+        bullets.splice(i,1); removed=true; break;
+      }
+
       const step=Math.min(remaining, 1/240); // ~4.17 ms => ~3 px step at 720 px/s
       const px=b.x, py=b.y, nx=px+b.vx*step, ny=py+b.vy*step;
 
