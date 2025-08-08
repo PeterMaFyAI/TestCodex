@@ -206,11 +206,24 @@ function step(dt){
       }
 
       if(target){
-        // move to impact, apply exactly one effect, remove bullet
-        b.x = px + (nx-px)*bestT; b.y = py + (ny-py)*bestT;
-        if(ttype==='circle'){ target.dead=true; explodeEnemy(target,ENEMY_COLOR); }
-        else{ target.hp-=1; splash(); if(target.hp<=0){ target.dead=true; explodeEnemy(target,HEAVY_COLOR); } }
-        bullets.splice(i,1); removed=true; break;
+        // move to impact and apply effect to a single target
+        b.x = px + (nx - px) * bestT;
+        b.y = py + (ny - py) * bestT;
+        if(ttype === 'circle'){
+          target.dead = true;
+          explodeEnemy(target, ENEMY_COLOR);
+        }else{
+          target.hp -= 1;
+          splash();
+          if(target.hp <= 0){
+            target.dead = true;
+            explodeEnemy(target, HEAVY_COLOR);
+          }
+        }
+        // remove bullet immediately so it can't hit another enemy
+        bullets.splice(i,1);
+        removed = true;
+        break;
       }
 
       // no enemy hit this substep: wall or advance
