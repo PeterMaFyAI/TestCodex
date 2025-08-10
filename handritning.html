@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rita med handgester (kamera + fallback)</title>
+<link rel="stylesheet" href="handritning.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>✋🖊️ Rita med handgester</h1>
+    <span class="badge">MediaPipe + WebRTC</span>
+    <div style="margin-left:auto; display:flex; gap:.5rem; align-items:center;">
+      <span class="capsule"><span id="camStatusDot">●</span><span id="camStatus">Initierar…</span></span>
+      <span class="capsule">Hand: <span id="handSide">–</span></span>
+      <span class="capsule">Läge: <span id="modeLabel">—</span></span>
+      <button id="btn-toggle-cam" class="btn" title="Aktivera/inaktivera kamera" style="width:auto; padding:0 .6rem">🎥 Av/På</button>
+    </div>
+  </header>
+
+  <main>
+    <video id="video" class="video-hidden" autoplay playsinline muted></video>
+    <canvas id="draw"></canvas>
+    <canvas id="ui"></canvas>
+    <div id="ghost" class="ghost" style="display:none; width:80px; height:80px;"></div>
+
+    <div class="toolbar" id="toolbar">
+      <div class="row">
+        <div class="btn active" data-tool="pen" id="btn-pen" title="Penna (nyp för att rita)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+        </div>
+        <div class="btn" data-tool="circle" id="btn-circle" title="Cirkel (håll nyp för storlek)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="7"/></svg>
+        </div>
+        <div class="btn" data-tool="square" id="btn-square" title="Kvadrat (håll nyp för storlek)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+        </div>
+      </div>
+      <div class="row" style="margin-top:.25rem;">
+        <div class="swatch" data-color="#ffffff" style="background:#ffffff"></div>
+        <div class="swatch" data-color="#22d3ee" style="background:#22d3ee"></div>
+        <div class="swatch" data-color="#60a5fa" style="background:#60a5fa"></div>
+        <div class="swatch" data-color="#a78bfa" style="background:#a78bfa"></div>
+        <div class="swatch" data-color="#f472b6" style="background:#f472b6"></div>
+        <div class="swatch" data-color="#34d399" style="background:#34d399"></div>
+        <div class="swatch" data-color="#fbbf24" style="background:#fbbf24"></div>
+        <div class="swatch" data-color="#ef4444" style="background:#ef4444"></div>
+      </div>
+      <div class="row" style="gap:.35rem; align-items:center; margin-top:.35rem;">
+        <span style="font-size:.8rem; color:#9aa5b1;">Tjocklek</span>
+        <input id="size" type="range" min="2" max="32" value="6" />
+        <span id="sizeVal" style="width:2ch; text-align:right; font-variant-numeric:tabular-nums;">6</span>
+      </div>
+      <div class="row" style="margin-top:.35rem;">
+        <div class="btn" id="btn-clear" title="Rensa allt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a 2 2 0 01-2-2L5 6m3 0V4a 2 2 0 012-2h4a 2 2 0 012 2v2"/><path d="M10 11v6M14 11v6"/></svg>
+        </div>
+        <div class="btn" id="btn-save" title="Spara PNG">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend" id="legend">
+      <div style="font-weight:700; margin-bottom:.35rem;">Gester</div>
+      <div>🫰 <b>Nyp</b> (tumme + pekfinger) = klick/ritstart.</div>
+      <div>🖊️ Nyp på <b>penna</b> ➜ rita genom att röra pekfingret.</div>
+      <div>⬜/⚪ Välj <b>form</b> ➜ håll nyp för storlek (avstånd = storlek), släpp för att placera.</div>
+      <div>🖐️ Öppen <b>handflata</b> + svep ➜ sudda där handflatan passerar.</div>
+      <div style="margin-top:.35rem;">🎨 Nyp på en <b>färgprick</b> för att byta färg.</div>
+      <hr style="border:0; border-top:1px solid #1f2937; margin:.5rem 0">
+      <div id="fallbackHelp" style="display:none">
+        <b>Mus-läge (fallback):</b> håll <span class="kbd">vänster musknapp</span> för att rita, <span class="kbd">Skift</span> + dra för att placera form, håll <span class="kbd">E</span> för tillfälligt sudd. 
+      </div>
+    </div>
+
+    <div class="overlay" id="permOverlay" aria-live="polite">
+      <div class="card">
+        <h2>Behörighet till kamera behövs</h2>
+        <p id="permMsg" style="margin:.25rem 0 .5rem 0">Webbläsaren rapporterade <b>Permission denied</b>. Du kan fortfarande använda appen i <b>mus-läge</b>, eller låta mig försöka igen.</p>
+        <ul>
+          <li>Kontrollera att sidan körs via <b>HTTPS</b> (eller <b>localhost</b>).</li>
+          <li>Öppna sajtens <b>webbplatsinställningar</b> och välj <b>Tillåt kamera</b>.</li>
+          <li>Stäng andra appar/flikar som använder kameran.</li>
+        </ul>
+        <div class="actions">
+          <button id="btn-retry" class="btn-lg">🔁 Försök igen</button>
+          <button id="btn-use-mouse" class="btn-lg btn-ghost">🖱️ Använd mus-läge</button>
+        </div>
+        <p style="margin-top:.6rem; color:#9aa5b1; font-size:.9rem">Tips: I Chrome/Edge klicka på hänglås‑ikonen → Behörigheter → Kamera → Tillåt. Uppdatera sedan sidan.</p>
+      </div>
+    </div>
+
+    <details class="diags" id="diags">
+      <summary>🔧 Diagnostik</summary>
+      <div id="diagList" style="font-size:.85rem; line-height:1.3; margin-top:.4rem"></div>
+      <div style="margin-top:.5rem; display:flex; gap:.4rem; flex-wrap:wrap">
+        <button class="btn" id="btn-run-tests" style="width:auto; padding:0 .6rem">Kör självtest</button>
+        <button class="btn" id="btn-stop-cam" style="width:auto; padding:0 .6rem">Stoppa kamera</button>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <div>🎯 <span id="hint">Sikta med pekfingret. Nyp för att trycka på knappar.</span></div>
+    <div style="display:flex; gap:.75rem; align-items:center;">
+      <span class="capsule">FPS: <span id="fps">–</span></span>
+      <span class="capsule">Pinch: <span id="pinchDbg">–</span></span>
+      <span class="capsule">Palm: <span id="palmDbg">–</span></span>
+    </div>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.min.js"></script>
+<script src="handritning.js"></script>
+</body>
+</html>
