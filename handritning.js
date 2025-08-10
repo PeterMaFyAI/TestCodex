@@ -176,9 +176,28 @@
     palmDbg.textContent = palmOpen ? 'öppen' : 'stängd';
 
     const pinchDown = pinch && !state.pinchWas; const pinchUp = !pinch && state.pinchWas;
-    function hitTestDOM(x, y, elems){ for(const el of elems){ const r=el.getBoundingClientRect(); if((pIndex.x/dpr)>=r.left && (pIndex.x/dpr)<=r.right && (pIndex.y/dpr)>=r.top && (pIndex.y/dpr)<=r.bottom) return el; } return null; }
+    function hitTestDOM(x, y, elems){
+      for(const el of elems){
+        const r = el.getBoundingClientRect();
+        if(x>=r.left && x<=r.right && y>=r.top && y<=r.bottom) return el;
+      }
+      return null;
+    }
 
-    if(pinchDown){ const toolBtn = hitTestDOM(); const btns=document.querySelectorAll('.btn[data-tool]'); let hit=null; for(const el of btns){ const r=el.getBoundingClientRect(); if((pIndex.x/dpr)>=r.left && (pIndex.x/dpr)<=r.right && (pIndex.y/dpr)>=r.top && (pIndex.y/dpr)<=r.bottom) { hit=el; break; } } if(hit){ selectTool(hit.dataset.tool); } else { const sws=document.querySelectorAll('.swatch'); let sw=null; for(const el of sws){ const r=el.getBoundingClientRect(); if((pIndex.x/dpr)>=r.left && (pIndex.x/dpr)<=r.right && (pIndex.y/dpr)>=r.top && (pIndex.y/dpr)<=r.bottom){ sw=el; break; } } if(sw) setColor(sw.dataset.color); const clr = document.getElementById('btn-clear'); const sav = document.getElementById('btn-save'); [clr,sav].forEach(el=>{ const r=el.getBoundingClientRect(); if((pIndex.x/dpr)>=r.left && (pIndex.x/dpr)<=r.right && (pIndex.y/dpr)>=r.top && (pIndex.y/dpr)<=r.bottom){ if(el.id==='btn-clear') clearAll(); else savePNG(); }}); } }
+    if(pinchDown){
+      const x = pIndex.x/dpr, y = pIndex.y/dpr;
+      const hitTool = hitTestDOM(x, y, document.querySelectorAll('.btn[data-tool]'));
+      if(hitTool){
+        selectTool(hitTool.dataset.tool);
+      } else {
+        const sw = hitTestDOM(x, y, document.querySelectorAll('.swatch'));
+        if(sw) setColor(sw.dataset.color);
+        const ctrl = hitTestDOM(x, y, [document.getElementById('btn-clear'), document.getElementById('btn-save')]);
+        if(ctrl){
+          if(ctrl.id==='btn-clear') clearAll(); else savePNG();
+        }
+      }
+    }
 
     if(state.tool==='pen'){
       ghost.style.display='none';
