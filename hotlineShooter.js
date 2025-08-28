@@ -165,7 +165,7 @@ function step(dt){
   tryMoveCircle(player,vx,vy,14);
 
   // bullets: substep continuous collision. First contact removes bullet.
-  bulletLoop: for(let i=bullets.length-1;i>=0;i--){
+  for(let i=bullets.length-1;i>=0;i--){
     const b=bullets[i];
     let remaining=dt;
     while(remaining>0){
@@ -182,7 +182,7 @@ function step(dt){
       if(overlap){
         hitEnemy(overlap,otype);
         bullets.splice(i,1);
-        continue bulletLoop;
+        break;
       }
 
       const step=Math.min(remaining,1/240); // ~4.17 ms => ~3 px step at 720 px/s
@@ -207,18 +207,18 @@ function step(dt){
         b.y = py + (ny - py) * bestT;
         hitEnemy(target,ttype);
         bullets.splice(i,1);
-        continue bulletLoop;
+        break;
       }
 
       // no enemy hit this substep: wall or advance
       if(!insideAnyRect(nx,ny,1.5)){
         wallThunk(); wallSpark(nx,ny,8);
         bullets.splice(i,1);
-        continue bulletLoop;
+        break;
       }
 
       b.x=nx; b.y=ny; b.life-=step; remaining-=step;
-      if(b.life<=0){ bullets.splice(i,1); continue bulletLoop; }
+      if(b.life<=0){ bullets.splice(i,1); break; }
     }
   }
 
