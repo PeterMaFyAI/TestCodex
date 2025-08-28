@@ -77,7 +77,13 @@ function spawnConfetti(){confetti=[];const cols=['#ffd8b0','#e3f2ff','#e9e2ff','
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='w'||k==='arrowup')keys.w=1;if(k==='a'||k==='arrowleft')keys.a=1;if(k==='s'||k==='arrowdown')keys.s=1;if(k==='d'||k==='arrowright')keys.d=1;if(k===' '){e.preventDefault();mouse.down=true;}});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(k==='w'||k==='arrowup')keys.w=0;if(k==='a'||k==='arrowleft')keys.a=0;if(k==='s'||k==='arrowdown')keys.s=0;if(k==='d'||k==='arrowright')keys.d=0;if(k===' ')mouse.down=false;});
 canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=(e.clientX-r.left)*(canvas.width/r.width);mouse.y=(e.clientY-r.top)*(canvas.height/r.height);});
-canvas.addEventListener('mousedown',()=>{mouse.down=true;fire();});
+canvas.addEventListener('mousedown',()=>{
+  mouse.down=true;
+  if(player.alive && player.cooldown<=0 && !winState){
+    fire();
+    player.cooldown=0.11;
+  }
+});
 canvas.addEventListener('mouseup',()=>{mouse.down=false;});
 canvas.addEventListener('click',()=>{if(gameOver)resetGame();});
 
