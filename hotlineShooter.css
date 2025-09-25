@@ -4,6 +4,147 @@ html, body {
   height: 100%;
   background: #ffd8b0;
   font-family: system-ui, "Segoe UI", Arial, sans-serif;
+  color: #0a2a66;
+}
+
+body {
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 4vw, 3.1rem);
+  color: inherit;
+}
+
+.version-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 1rem;
+  border: 3px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: inherit;
+}
+
+.page .welcome {
+  margin: 0;
+  font-size: 1.1rem;
+  color: inherit;
+}
+
+.home-link-wrapper {
+  margin: 0;
+}
+
+.page a.home-link {
+  color: inherit;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.scoreboard {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-self: stretch;
+}
+
+.score-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.score-cell {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.score-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.score-label .score-episode {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #505d7a;
+}
+
+.score-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.icon-legend {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+.icon-legend h2 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.icon-legend ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+}
+
+.icon-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.icon-legend .icon {
+  font-size: 1.4rem;
 }
 canvas {
   display: block;
@@ -37,9 +178,3 @@ canvas {
   font-weight: 700;
 }
 
-.version{
-  position:fixed;
-  top:6px;
-  right:10px;
-  font-weight:bold;
-}
